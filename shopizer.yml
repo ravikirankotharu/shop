@@ -1,5 +1,5 @@
 ---
-- host: localhost
+- hosts: localhost
   become: yes
   tasks:
   - name: updating ubuntu packages
@@ -26,36 +26,37 @@
     package:
       name: maven
       state: present
-  - name: creating a shopizer_git directory
+  - name: "creating a shopizer folder"
     file:
-      path: shopizer_git
+      path: /opt/shopizer
       state: directory
-      mode: '0755'
-  - name: Download shopizer git file
-    get_url:
-      url: https://github.com/shopizer-ecommerce/shopizer.git
-      dest: /opt/shopizer_git/
-  - name: Go to the folder
-    shell: cd /opt/shopizer_git/shopizer
-    args:
-      executable: /bin/bash
-  - name: build the shopizer application
-    command: mvn clean install
+  - name: "downloading shopizer from git"
+    git:
+      repo: 'git://github.com/shopizer-ecommerce/shopizer.git'
+      dest: ~/shopizer/
+  - name: chaning floder 
+    shell: cd ~/shopizer/
+  #- name: moving shopizer into /opt/
+  #  shell : mv ./shopizer /opt/ 
+  - name: building the application
+    shell: mvn clean install
+  - name: changing directory
+    command: cd sm-shop/
     
-  - name: Run the application from Spring boot
-    command: mvn spring-boot:run
-    args:
-      chdir: sm-shop/
-      executable: /bin/bash
+  #- name: Run the application from Spring boot
+  #  command: mvn spring-boot:run
+  #  args:
+  #    chdir: sm-shop/
+  #    executable: /bin/bash
 
   #- name: change directory to sm-shop
   #  shell: cd sm-shop
   #  args:
   #    executable: /bin/bash
-  #- name: Run the application from Spring boot
-  #  shell: mvn spring-boot:run
-  #  args:
-  #    executable: /bin/bash
+  - name: Run the application from Spring boot
+    shell: mvn spring-boot:run
+    args:
+      executable: /bin/bash
   
   
 
