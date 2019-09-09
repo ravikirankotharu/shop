@@ -1,0 +1,64 @@
+---
+- host: localhost
+  become: yes
+  tasks:
+  - name: updating ubuntu packages
+    apt:
+      update_cache: yes
+    when: ansible_os_family == "Debian"
+  - name: installing openjdk-8
+    package: 
+      name: openjdk-8-jdk
+      state: present
+  - name: removeing env file
+    file:
+      path: /etc/environment
+      state: absent
+  - name: setting environmental variables
+    template:
+      src: ./environment.j2
+      dest: /etc/environment
+  - name: "refresh environment"
+    shell: source /etc/environment
+    args:
+      executable: /bin/bash
+  - name: installing maven package
+    package:
+      name: maven
+      state: present
+  - name: creating a shopizer_git directory
+    file:
+      path: shopizer_git
+      state: directory
+      mode: '0755'
+  - name: Download shopizer git file
+    get_url:
+      url: https://github.com/shopizer-ecommerce/shopizer.git
+      dest: /opt/shopizer_git/
+  - name: Go to the folder
+    shell: cd /opt/shopizer_git/shopizer
+    args:
+      executable: /bin/bash
+  - name: build the shopizer application
+    command: mvn clean install
+    
+  - name: Run the application from Spring boot
+    command: mvn spring-boot:run
+    args:
+      chdir: sm-shop/
+      executable: /bin/bash
+
+  #- name: change directory to sm-shop
+  #  shell: cd sm-shop
+  #  args:
+  #    executable: /bin/bash
+  #- name: Run the application from Spring boot
+  #  shell: mvn spring-boot:run
+  #  args:
+  #    executable: /bin/bash
+  
+  
+
+    
+    
+      
