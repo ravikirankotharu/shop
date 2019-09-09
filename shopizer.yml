@@ -18,7 +18,7 @@
     template:
       src: ./environment.j2
       dest: /etc/environment
-  - name: "refresh environment"
+  - name: refresh environment
     shell: source /etc/environment
     args:
       executable: /bin/bash
@@ -26,15 +26,15 @@
     package:
       name: maven
       state: present
-  - name: "creating a shopizer folder"
+  - name: creating a shopizer folder
     file:
       path: /opt/shopizer
       state: directory
-  - name: "downloading shopizer from git"
+  - name: downloading shopizer from git
     git:
       repo: 'git://github.com/shopizer-ecommerce/shopizer.git'
       dest: ~/shopizer/
-  - name: chaning floder 
+  - name: changing directory 
     shell: cd ~/shopizer/
   #- name: moving shopizer into /opt/
   #  shell : mv ./shopizer /opt/ 
