@@ -26,23 +26,26 @@
     package:
       name: maven
       state: present
-  - name: creating a shopizer folder
-    file:
-      path: /opt/shopizer
-      state: directory
+  #- name: creating a shopizer folder
+  #  file:
+  #    path: /opt/shopizer
+  #    state: directory
   - name: downloading shopizer from git
     git:
       repo: 'git://github.com/shopizer-ecommerce/shopizer.git'
-      dest: ~/shopizer/
-  - name: changing directory 
-    shell: cd ~/shopizer/
+      dest: /home/ansible/shopizer/
+      update: yes
   #- name: moving shopizer into /opt/
   #  shell : mv ./shopizer /opt/ 
   - name: building the application
     shell: mvn clean install
-  - name: changing directory
-    command: cd sm-shop/
-    
+    args:
+      chdir: /home/ansible/shopizer/
+      executable: /bin/bash
+  #- name: changing directory
+  #  shell: cd /home/ansible/shopizer/sm-shop/
+  #  args:
+  #    executable: /bin/bash
   #- name: Run the application from Spring boot
   #  command: mvn spring-boot:run
   #  args:
@@ -56,6 +59,7 @@
   - name: Run the application from Spring boot
     shell: mvn spring-boot:run
     args:
+      chdir: /home/ansible/shopizer/sm-shop/
       executable: /bin/bash
   
   
